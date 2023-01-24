@@ -10,7 +10,11 @@
  Пример:
    createDivWithText('loftschool') // создаст элемент div, поместит в него 'loftschool' и вернет созданный элемент
  */
-function createDivWithText(text) {}
+function createDivWithText(text) {
+  const divElement = document.createElement('div');
+  divElement.textContent = text;
+  return divElement;
+}
 
 /*
  Задание 2:
@@ -20,7 +24,9 @@ function createDivWithText(text) {}
  Пример:
    prepend(document.querySelector('#one'), document.querySelector('#two')) // добавит элемент переданный первым аргументом в начало элемента переданного вторым аргументом
  */
-function prepend(what, where) {}
+function prepend(what, where) {
+  where.insertBefore(what, where.firstChild);
+}
 
 /*
  Задание 3:
@@ -41,7 +47,19 @@ function prepend(what, where) {}
 
    findAllPSiblings(document.body) // функция должна вернуть массив с элементами div и span т.к. следующим соседом этих элементов является элемент с тегом P
  */
-function findAllPSiblings(where) {}
+function findAllPSiblings(where) {
+  const siblings = [];
+  let node = where.lastChild;
+  while (node) {
+    if (node.tagName === 'P') {
+      node = node.previousElementSibling;
+      siblings.unshift(node);
+    } else {
+      node = node.previousElementSibling;
+    }
+  }
+  return siblings;
+}
 
 /*
  Задание 4:
@@ -64,7 +82,7 @@ function findError(where) {
   const result = [];
 
   for (const child of where.childNodes) {
-    result.push(child.textContent);
+    if (child.nodeType === Node.ELEMENT_NODE) result.push(child.textContent);
   }
 
   return result;
@@ -82,7 +100,13 @@ function findError(where) {
    После выполнения функции, дерево <div></div>привет<p></p>loftchool!!!
    должно быть преобразовано в <div></div><p></p>
  */
-function deleteTextNodes(where) {}
+function deleteTextNodes(where) {
+  for (const child of where.childNodes) {
+    if (child.nodeType === Node.TEXT_NODE) {
+      where.removeChild(child);
+    }
+  }
+}
 
 /*
  Задание 6:
@@ -95,7 +119,15 @@ function deleteTextNodes(where) {}
    После выполнения функции, дерево <span> <div> <b>привет</b> </div> <p>loftchool</p> !!!</span>
    должно быть преобразовано в <span><div><b></b></div><p></p></span>
  */
-function deleteTextNodesRecursive(where) {}
+function deleteTextNodesRecursive(where) {
+  const childs = [...where.childNodes];
+  if (childs.length > 0) {
+    childs.map((child) => {
+      if (child.nodeType === Node.TEXT_NODE) where.removeChild(child);
+      if (child.childNodes) deleteTextNodesRecursive(child);
+    });
+  }
+}
 
 /*
  Задание 7 *:
@@ -117,7 +149,41 @@ function deleteTextNodesRecursive(where) {}
      texts: 3
    }
  */
-function collectDOMStat(root) {}
+function collectDOMStat(root) {
+  const statObj = {
+    tags: {},
+    classes: {},
+    texts: 0,
+  };
+  const getStat = (el) => {
+    const childs = [...el.childNodes];
+    if (childs.length > 0) {
+      childs.map((child) => {
+        /* save stat */
+
+        if (child.nodeType === Node.ELEMENT_NODE) {
+          [...child.classList].map((cls) => {
+            statObj.classes[cls]
+              ? (statObj.classes[cls] += 1)
+              : (statObj.classes[cls] = 1);
+          });
+
+          statObj.tags[child.tagName]
+            ? (statObj.tags[child.tagName] += 1)
+            : (statObj.tags[child.tagName] = 1);
+        } else if (child.nodeType === Node.TEXT_NODE) {
+          statObj.texts += 1;
+        }
+        /* --------- */
+        if (child.children) {
+          getStat(child);
+        }
+      });
+    }
+  };
+  getStat(root);
+  return statObj;
+}
 
 /*
  Задание 8 *:
@@ -151,8 +217,19 @@ function collectDOMStat(root) {}
      nodes: [div]
    }
  */
-function observeChildNodes(where, fn) {}
-
+function observeChildNodes(where, fn) {
+  const observ = new MutationObserver((res) => {
+    let obj = {};
+    res[0].addedNodes.length
+      ? (obj = { type: 'insert', nodes: [...res[0].addedNodes] })
+      : (obj = { type: 'remove', nodes: [...res[0].removedNodes] });
+    return fn(obj);
+  });
+  observ.observe(where, {
+    childList: true,
+    subtree: true,
+  });
+}
 export {
   createDivWithText,
   prepend,
