@@ -7,9 +7,9 @@
     "codestyle": "eslint projects",
     "codestyle:fix": "eslint projects --fix",
     "travis": "npm run codestyle && npm test",
-    "build": "webpack --progress --colors",
-    "build:prod": "NODE_ENV=production webpack --progress --colors",
-    "watch": "webpack-dev-server",
+    "build": "webpack --progress ",
+    "build:prod": "NODE_ENV=production webpack --progress",
+    "watch": "webpack-dev-server --live-reload --hot --host localhost --port 8080 ",
     "start": "npm run watch",
     "test": "jest",
     "test:coverage": "jest --coverage"
@@ -26,7 +26,8 @@
       "eslint --cache --fix"
     ]
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "@babel/core": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
@@ -34,8 +35,6 @@
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.1.0",
     "babel-loader": "^8.1.0",
-    "clean-webpack-plugin": "^3.0.0",
-    "css-loader": "^3.6.0",
     "eslint": "^7.4.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-jest": "^23.18.0",
@@ -45,15 +44,17 @@
     "husky": "^4.2.5",
     "jest": "^26.1.0",
     "lint-staged": "^10.2.11",
-    "mini-css-extract-plugin": "^0.9.0",
     "node-fetch-polyfill": "^2.0.6",
     "prettier": "^2.0.5",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
-  },
-  "devDependencies": {
-    "html-loader": "^0.5.5",
-    "raw-loader": "^4.0.2"
+    "css-loader": "^6.7.3",
+    "html-loader": "^4.2.0",
+    "html-webpack-partials-plugin": "^0.8.0",
+    "mini-css-extract-plugin": "^2.7.2",
+    "sass": "^1.57.1",
+    "sass-loader": "^13.2.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
   }
 }

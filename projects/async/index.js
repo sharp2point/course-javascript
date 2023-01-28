@@ -28,8 +28,7 @@
    const newDiv = document.createElement('div');
    homeworkContainer.appendChild(newDiv);
  */
-
-import './towns.html';
+import './styles/main.css';
 
 const homeworkContainer = document.querySelector('#app');
 
@@ -39,8 +38,6 @@ const homeworkContainer = document.querySelector('#app');
  Массив городов пожно получить отправив асинхронный запрос по адресу
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
  */
-function loadTowns() {}
-
 /*
  Функция должна проверять встречается ли подстрока chunk в строке full
  Проверка должна происходить без учета регистра символов
@@ -67,8 +64,86 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 /* Блок с результатами поиска */
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
-retryButton.addEventListener('click', () => {});
+/*--------------------------------------------------------*/
 
-filterInput.addEventListener('input', function () {});
+retryButton.addEventListener('click', () => {
+  requestTownsAPI();
+});
 
+filterInput.addEventListener('focus', (e) => {
+  e.preventDefault();
+});
+filterInput.addEventListener('input', function (e) {
+  filterResult.textContent = '';
+  const value = e.target.value;
+  if (value !== '') {
+    const result = TOWNS_RESULT.filter((itm) => {
+      return itm.includes(e.target.value.toLowerCase());
+    });
+    let template = ``;
+    result.forEach((itm) => {
+      // const el = document.createElement('span');
+      // el.classList.add('list-item');
+      // el.textContent = itm;
+      //filterResult.appendChild(el);
+
+      const arr = itm.split(value);
+      const out_arr = [];
+      for (let i = 0; i < arr.length; i++) {
+        out_arr.push(arr[i]);
+        if (i < arr.length - 1) out_arr.push(`<span class='mark'>${value}</span>`);
+      }
+
+      template += `<span class='list-item'>${out_arr.join('')}</span>`;
+    });
+    filterResult.innerHTML = template;
+  }
+});
+
+/* ------------------------------------------ */
+const TOWNS_API_PATH =
+  'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json';
+
+let TOWNS_RESULT = [];
+
+async function loadTowns() {
+  let resp = await fetch(TOWNS_API_PATH);
+  resp = await resp.json();
+  return resp.map((item) => item.name).sort();
+}
+
+const app_states = {
+  loading: () => {
+    console.log('Loading...');
+    loadingBlock.classList.remove('hidden');
+    loadingFailedBlock.classList.add('hidden');
+    filterBlock.classList.add('hidden');
+  },
+  fail: () => {
+    console.log('Fail !');
+    loadingBlock.classList.add('hidden');
+    loadingFailedBlock.classList.remove('hidden');
+    filterBlock.classList.add('hidden');
+  },
+  full: () => {
+    console.log('Loading Full !');
+    loadingBlock.classList.add('hidden');
+    loadingFailedBlock.classList.add('hidden');
+    filterBlock.classList.remove('hidden');
+  },
+};
+
+function requestTownsAPI() {
+  app_states.loading();
+  loadTowns()
+    .then((t) => {
+      app_states.full();
+      TOWNS_RESULT = Array.from(t).map((itm) => itm.toLowerCase());
+    })
+    .catch(() => {
+      app_states.fail();
+    });
+}
+
+requestTownsAPI();
 export { loadTowns, isMatching };
