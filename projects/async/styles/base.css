@@ -1,0 +1,12 @@
+:root {
+  --warn-text: #ff0000;
+  --base-text: #353535;
+  font-family: Geneva, Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+#app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

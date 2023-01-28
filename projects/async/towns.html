@@ -1,0 +1,21 @@
+<div id="app">
+  <div id="loading-block" class="app-panel loading-panel">
+    Загрузка...
+    <span></span>
+  </div>
+  <div id="loading-failed" class="app-panel failed-panel hidden">
+    <div class="fail-message">Не удалось загрузить города</div>
+    <button id="retry-button" class="retry-button">Повторить</button>
+  </div>
+  <div id="filter-block" class="app-panel filter-panel hidden">
+    <label for="select-town" class="filter-input-label">Выбери город</label>
+    <input
+      id="filter-input"
+      class="filter-input"
+      name="select-town"
+      placeholder="название города"
+      type="text"
+    />
+    <div id="filter-result" class="filter-result"></div>
+  </div>
+</div>

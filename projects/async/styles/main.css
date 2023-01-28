@@ -1,0 +1,11 @@
+@import url('./base.css');
+@import url('./loadingPanel.css');
+@import url('./failedPanel.css');
+@import url('./filterPanel.css');
+
+.hidden {
+  display: none;
+}
+.mark {
+  color: var(--warn-text);
+}
