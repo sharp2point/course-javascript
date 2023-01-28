@@ -3,7 +3,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackPartialsPlugin = require('html-webpack-partials-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-/* --------------------------------------------------- */
 
 module.exports = {
   mode: 'development',
@@ -32,6 +31,7 @@ module.exports = {
         type: 'asset/resource',
         generator: {
           filename: 'assets/fonts/[name].[ext]',
+
         },
       },
       {
