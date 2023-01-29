@@ -9,7 +9,7 @@
     "travis": "npm run codestyle && npm test",
     "build": "webpack --progress --colors",
     "build:prod": "NODE_ENV=production webpack --progress --colors",
-    "watch": "webpack-dev-server --progress --colors",
+    "watch": "webpack-dev-server",
     "start": "npm run watch",
     "test": "jest",
     "test:coverage": "jest --coverage"
@@ -48,9 +48,12 @@
     "mini-css-extract-plugin": "^0.9.0",
     "node-fetch-polyfill": "^2.0.6",
     "prettier": "^2.0.5",
-    "raw-loader": "^4.0.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
+  },
+  "devDependencies": {
+    "html-loader": "^0.5.5",
+    "raw-loader": "^4.0.2"
   }
 }
