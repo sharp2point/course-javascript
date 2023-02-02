@@ -24,6 +24,7 @@
  */
 
 import './cookie.html';
+import * as CookWork from './cookwork';
 
 /*
  app - это контейнер для всех ваших домашних заданий
@@ -37,16 +38,63 @@ const homeworkContainer = document.querySelector('#app');
 // текстовое поле для фильтрации cookie
 const filterNameInput = homeworkContainer.querySelector('#filter-name-input');
 // текстовое поле с именем cookie
-//const addNameInput = homeworkContainer.querySelector('#add-name-input');
+const addNameInput = homeworkContainer.querySelector('#add-name-input');
 // текстовое поле со значением cookie
-//const addValueInput = homeworkContainer.querySelector('#add-value-input');
+const addValueInput = homeworkContainer.querySelector('#add-value-input');
 // кнопка "добавить cookie"
 const addButton = homeworkContainer.querySelector('#add-button');
 // таблица со списком cookie
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
-filterNameInput.addEventListener('input', function () {});
+filterNameInput.addEventListener('input', function (e) {
+  CookWork.filterCookie(e.target.value);
+});
 
-addButton.addEventListener('click', () => {});
+addButton.addEventListener('click', handlerAddClick);
 
-listTable.addEventListener('click', (e) => {});
+listTable.addEventListener('click', (e) => {
+  if (e.target.tagName === 'BUTTON') {
+    const button = e.target;
+    const key = button.dataset.key;
+    CookWork.deleteCookie(key);
+  }
+});
+homeworkContainer.addEventListener('keyup', (e) => {
+  e.preventDefault();
+  if (e.key === 'Enter') {
+    switch (e.target.tagName) {
+      case 'INPUT': {
+        if (
+          CookWork.elmentValidateById(e, 'add-name-input') ||
+          CookWork.elmentValidateById(e, 'add-value-input')
+        ) {
+          handlerAddClick();
+        } else if (CookWork.elmentValidateById(e, 'filter-name-input')) {
+          CookWork.filterCookie(e.target.value);
+        }
+      }
+    }
+  }
+});
+/*-----------------------------------------------------------*/
+function handlerAddClick() {
+  if (
+    CookWork.inputValidator(addNameInput.value) &&
+    CookWork.inputValidator(addValueInput.value)
+  ) {
+    const name = addNameInput.value.trim();
+    const value = addValueInput.value.trim();
+    const filter = filterNameInput.value.trim();
+
+    if (filter !== '' && (name.includes(filter) || value.includes(filter))) {
+      CookWork.createCookie(name, value);
+    } else if (filter !== '' && !(name.includes(filter) || value.includes(filter))) {
+      CookWork.createCookie(name, value, false);
+    } else {
+      CookWork.createCookie(name, value);
+    }
+    addNameInput.value = '';
+    addValueInput.value = '';
+  }
+}
+CookWork.readCookie();
