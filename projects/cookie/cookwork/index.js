@@ -1,4 +1,4 @@
-import './src/render.js';
+export { updateDOM } from './src/render.js';
 export {
   createCookie,
   readCookie,

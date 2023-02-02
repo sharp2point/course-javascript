@@ -48,53 +48,54 @@ const listTable = homeworkContainer.querySelector('#list-table tbody');
 
 filterNameInput.addEventListener('input', function (e) {
   CookWork.filterCookie(e.target.value);
+  CookWork.updateDOM(listTable, cookies.getTemplate());
 });
 
 addButton.addEventListener('click', handlerAddClick);
 
 listTable.addEventListener('click', (e) => {
   if (e.target.tagName === 'BUTTON') {
-    const button = e.target;
-    const key = button.dataset.key;
-    CookWork.deleteCookie(key);
+    CookWork.deleteCookie(e.target.dataset.key);
+    CookWork.updateDOM(listTable, cookies.getTemplate());
   }
 });
+
 homeworkContainer.addEventListener('keyup', (e) => {
   e.preventDefault();
   if (e.key === 'Enter') {
-    switch (e.target.tagName) {
-      case 'INPUT': {
-        if (
-          CookWork.elmentValidateById(e, 'add-name-input') ||
-          CookWork.elmentValidateById(e, 'add-value-input')
-        ) {
-          handlerAddClick();
-        } else if (CookWork.elmentValidateById(e, 'filter-name-input')) {
-          CookWork.filterCookie(e.target.value);
-        }
+    if (e.target.tagName === 'INPUT') {
+      if (
+        CookWork.elmentValidateById(e, 'add-name-input') ||
+        CookWork.elmentValidateById(e, 'add-value-input')
+      ) {
+        handlerAddClick();
+      } else if (CookWork.elmentValidateById(e, 'filter-name-input')) {
+        CookWork.filterCookie(e.target.value);
+        CookWork.updateDOM(listTable, cookies.getTemplate());
       }
     }
   }
 });
 /*-----------------------------------------------------------*/
 function handlerAddClick() {
-  if (
-    CookWork.inputValidator(addNameInput.value) &&
-    CookWork.inputValidator(addValueInput.value)
-  ) {
-    const name = addNameInput.value.trim();
-    const value = addValueInput.value.trim();
-    const filter = filterNameInput.value.trim();
+  const key = addNameInput.value;
+  const value = addValueInput.value;
+  const filter = filterNameInput.value;
 
-    if (filter !== '' && (name.includes(filter) || value.includes(filter))) {
-      CookWork.createCookie(name, value);
-    } else if (filter !== '' && !(name.includes(filter) || value.includes(filter))) {
-      CookWork.createCookie(name, value, false);
+  if (filter?.trim().length === 0) {
+    // без фильтра
+    CookWork.createCookie(key, value);
+  } else {
+    // с фильтрацией
+    if (key.includes(filter) || value.includes(filter)) {
+      CookWork.createCookie(key, value, true);
     } else {
-      CookWork.createCookie(name, value);
+      CookWork.createCookie(key, value, false);
     }
-    addNameInput.value = '';
-    addValueInput.value = '';
+    CookWork.filterCookie(filterNameInput.value);
   }
+  CookWork.updateDOM(listTable, cookies.getTemplate());
 }
-CookWork.readCookie();
+
+const cookies = CookWork.readCookie();
+CookWork.updateDOM(listTable, cookies.getTemplate());
