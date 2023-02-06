@@ -34,6 +34,7 @@ for (const project of projects) {
 const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 
 module.exports = {
+  devtool: 'source-map',
   entry: entries,
   output: {
     filename: mode === 'production' ? 'name/[chunkhash].js' : '[name]/[name].js',
