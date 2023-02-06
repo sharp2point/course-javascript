@@ -87,11 +87,8 @@ function handlerAddClick() {
     CookWork.createCookie(key, value);
   } else {
     // с фильтрацией
-    if (key.includes(filter) || value.includes(filter)) {
-      CookWork.createCookie(key, value, true);
-    } else {
-      CookWork.createCookie(key, value, false);
-    }
+    const isFilter = key.includes(filter) || value.includes(filter);
+    CookWork.createCookie(key, value, isFilter);
     CookWork.filterCookie(filterNameInput.value);
   }
   CookWork.updateDOM(listTable, cookies.getTemplate());
